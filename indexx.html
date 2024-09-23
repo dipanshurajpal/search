@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SearchHub</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 40px;
+            color: #f6f6f6;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #ea4335;
+        }
+
+        .logo .yellow {
+            color: #fbbc05;
+        }
+
+        .logo .green {
+            color: #34a853;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            box-shadow: 0px 1px 6px rgba(32, 33, 36, 0.28);
+            font-size: 16px;
+            outline: none;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"]:hover, input[type="text"]:focus {
+            border: 1px solid #4285f4;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #f8f9fa;
+            color: #202124;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        button:hover {
+            background-color: #e8eaed;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        h2 {
+            font-size: 18px;
+            color: #202124;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #f8f9fa;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #202124;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-button {
+            background-color: #ea4335;
+            color: #ffffff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .delete-button:hover {
+            background-color: #d93025;
+        }
+
+        /* Top right corner section */
+        .top-right {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+        }
+
+        .top-right a {
+            text-decoration: none;
+            color: #5f6368;
+        }
+
+        .top-right a:hover {
+            text-decoration: underline;
+        }
+
+        .top-right img {
+            height: 24px;
+            width: 24px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="logo">
+            Welcome to search engine
+        </div>
+        <br>
+        <input type="text" id="searchInput" placeholder="Search...">
+        <br>
+        <button id="searchButton">Search</button>
+
+        <h2>Search History</h2>
+        <ul id="searchHistory"></ul>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById("searchInput");
+            const searchButton = document.getElementById("searchButton");
+            const searchHistoryList = document.getElementById("searchHistory");
+
+            let searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
+
+            displaySearchHistory();
+
+            searchButton.addEventListener("click", function () {
+                const searchTerm = searchInput.value.trim();
+
+                if (searchTerm) {
+                    searchHistory.push(searchTerm);
+                    localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+                    displaySearchHistory();
+                    searchInput.value = "";
+                }
+            });
+
+            function displaySearchHistory() {
+                searchHistoryList.innerHTML = "";
+                searchHistory.forEach(function (term, index) {
+                    const li = document.createElement("li");
+                    li.textContent = term;
+
+                    const deleteButton = document.createElement("button");
+                    deleteButton.textContent = "Delete";
+                    deleteButton.classList.add("delete-button");
+                    deleteButton.addEventListener("click", function () {
+                        searchHistory.splice(index, 1);
+                        localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+                        displaySearchHistory();
+                    });
+
+                    li.appendChild(deleteButton);
+                    searchHistoryList.appendChild(li);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
